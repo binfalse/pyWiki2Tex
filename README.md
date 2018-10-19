@@ -13,7 +13,7 @@ Python tool to retrieve a page from Wikipedia and store it as a latex code file 
 
 with the following arguments:
 
-* `-h`, `--help`           show this help message and exit
+* `page` the page name to retrieve
 * `--language LANGUAGE`  The wikipedia language, defaults to en.
 * `--dest DEST`          Where to store the tex document? If {DEST} does not end
 in `.tex`, we treat it as a directory. If {DEST} is a
@@ -24,6 +24,7 @@ called with --overwrite.
 If {IMAGEDIR} is empty, images are not retrieved. Will
 not overwrite images, unless called with --overwrite.
 * `--overwrite`          Should existing files be overwritten?
+* `-h`, `--help`           Show a help message and exit
 
 
 ## Example
