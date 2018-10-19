@@ -1,3 +1,22 @@
+#!/usr/bin/env python3
+#
+# Copyright (C) 2018 Martin Scharm <https://binfalse.de/contact/>
+#
+# This file is part of wiki2tex
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import wptools
 import pypandoc
 import argparse
@@ -5,19 +24,30 @@ import os
 import errno
 import requests
 
-parser = argparse.ArgumentParser (description='wiki2tex - convert a wikipedia page to latex source code')
 
+parser = argparse.ArgumentParser (
+	formatter_class=argparse.RawDescriptionHelpFormatter,
+	description='wiki2tex - convert a wikipedia page to latex source code',
+	epilog='''\
+	
+	
+EXAMPLE:
 
+If you, for example, want to retrieve the German Wikipedia page for
+"Digitalisierung" and store it together with all images in
+/tmp/latexproject, you would call the following:
+
+python3 wiki2tex.py Digitalisierung --language de --dest /tmp/latexproject --imagedir /tmp/latexproject --overwrite''')
 parser.add_argument ('page',
-										 help='The page\'s name')
+										 help='The page\'s name on Wikipedia')
 parser.add_argument ('--language',
 										 default='en',
-										 help='The wikipedia language, defaults to en')
+										 help='The wikipedia language, defaults to en.')
 parser.add_argument ('--dest',
 										 default='./',
-										 help='where to store the tex document? if dest is a directory, we will create {dest}/{pagename}.tex, defaults to "./". Will not overwrite files, unless called with --overwrite.')
+										 help='Where to store the tex document? If {DEST} does not end in `.tex`, we treat it as a directory. If {DEST} is a directory, we will create `{DEST}/{page}.tex`. {DEST} defaults to `./`. We will not overwrite files, unless called with --overwrite.')
 parser.add_argument ('--imagedir',
-										 help='Path to a directory to store the images of the article. If empty, images are not retrieved. Will not overwrite images, unless called with --overwrite.')
+										 help='Path to a directory to store the images of the article. If {IMAGEDIR} is empty, images are not retrieved. Will not overwrite images, unless called with --overwrite.')
 
 parser.add_argument ('--overwrite',
 										 action='store_true',
@@ -31,7 +61,7 @@ args = parser.parse_args()
 
 # where to store the tex file?
 targettex = args.dest
-if os.path.isdir (targettex):
+if os.path.isdir (targettex) or not targettex.endswith(".tex"):
 	targettex = os.path.join (targettex, args.page + ".tex")
 
 if os.path.exists (targettex) and not args.overwrite:
